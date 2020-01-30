@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# get debian distribution codename
+DISTRIBUTION=$(shell lsb_release -sc)
+
+# get version from changelog, for string mangling
+VERSION=$(shell dpkg-parsechangelog --count 1 --show-field Version)
+
+# add distribution codename to package version
+PACKAGEVERSION=$(subst ~,~$(DISTRIBUTION)-,$(VERSION))
+
+%:
+	dh $@  --with autotools-dev
+
+# setting mangled package version
+override_dh_gencontrol:
+	dh_gencontrol -- -v$(PACKAGEVERSION)
+
+override_dh_auto_configure:
+	sed -i 's/SUBDIRS = .\+/SUBDIRS = include libjwt/g' Makefile.am
+	autoreconf -i
+	./configure \
+	  --prefix=/usr \
+	  --host=$(DEB_HOST_GNU_TYPE) \
+	  --build=$(DEB_BUILD_GNU_TYPE) \
+	  --libdir=/usr/lib/$(DEB_HOST_GNU_TYPE)
+
+override_dh_auto_build:
+	make all
