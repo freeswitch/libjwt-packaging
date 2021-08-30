@@ -4,7 +4,7 @@
     <Import Project="basedir.props" Condition=" '$(BaseDirImported)' == ''"/>
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <libjwtVersion>1.12.0</libjwtVersion>
+    <libjwtVersion>1.13.1</libjwtVersion>
     <libjwtLibDir>$(BaseDir)libjwt-$(libjwtVersion)</libjwtLibDir>
   </PropertyGroup>
   <PropertyGroup>
